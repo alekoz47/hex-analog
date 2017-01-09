@@ -1,0 +1,29 @@
+{
+    "author": "alekoz47",
+    "dependencies": {},
+    "keywords": [],
+    "name": "simple",
+    "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
+        "displayName": "Simple",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "rocky",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "emery"
+        ],
+        "uuid": "00ff2603-d660-4514-aa47-4077d17604ad",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "3.0.0"
+}
