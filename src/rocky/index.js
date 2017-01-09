@@ -1,41 +1,74 @@
 var rocky = require("rocky");
 var settings = null;
-var handColor = "white";
 
-function drawFace(ctx) {
+function draw(ctx) {
 	var d = new Date();
 	var w = ctx.canvas.unobstructedWidth;
 	var h = ctx.canvas.unobstructedHeight;
 	var cx = w / 2;
 	var cy = h / 2;
+	var days = d.getDate();
+	var minutes = d.getMinutes();
+	var hours = d.getHours();
 	var maxLength = (Math.min(w, h) - 10) / 2;
-	var minuteFraction = d.getMinutes() / 60;
+	var minuteFraction = minutes / 60;
 	var minuteAngle = fractionToRadian(minuteFraction);
-	var hourFraction = (d.getHours() % 12 + minuteFraction) / 12;
+	var hourFraction = (hours % 12 + minuteFraction) / 12;
 	var hourAngle = fractionToRadian(hourFraction);
 	
-	ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+	ctx.clearRect(0, 0, w, h);
 	
-	for (var ii = 0; ii < 360; ii += 6) {
-		var angle = fractionToRadian(ii / 360);
-		var x = cx + Math.sin(angle) * maxLength;
-		var y = cy - Math.cos(angle) * maxLength;
-		if (ii % 30 === 0) {
-			drawTick(ctx, x, y, angle, maxLength * 0.1, "lightgrey");
-		} else {
-			drawTick(ctx, x, y, angle, maxLength * 0.05, "darkgrey");
-		}
-	}
+	var color = dateToHex(days, hours, minutes);
+	drawBackground(ctx, color, w, h);
+	
+	var colorString = hexStringToColor(color);
+	var overlayColor = setColor(ctx, colorString);
+	ctx.strokeStyle = overlayColor;
+	ctx.fillStyle = overlayColor;
+	drawTicks(ctx, cx, cy, maxLength);
 	drawText(ctx, w - 45, cy - ctx.measureText("0").height, d.getDate().toString());
-	ctx.strokeStyle = handColor;
-	ctx.fillStyle = handColor;
-	drawHand(ctx, cx, cy, minuteAngle, maxLength * 0.8, 7);
-	drawHand(ctx, cx, cy, hourAngle, maxLength * 0.5, 10);
+	drawHand(ctx, cx, cy, minuteAngle, maxLength * 0.8, 7, color);
+	drawHand(ctx, cx, cy, hourAngle, maxLength * 0.5, 10, color);
 	drawCenter(ctx, cx, cy);
+}
+
+function dateToHex(d, h, m) {
+	d = Math.round(convertRange(d, 0, 31, 0, 255));
+	h = Math.round(convertRange(h, 0, 24, 0, 255));
+	m = Math.round(convertRange(m, 0, 60, 0, 255));
+	
+	d = extendString(d.toString(16), 2);
+	h = extendString(h.toString(16), 2);
+	m = extendString(m.toString(16), 2);
+	
+	var dateHexString = d.toString(16) + h.toString(16) + m.toString(16);
+	console.log("hex color: " + dateHexString);
+	return dateHexString;
+}
+
+function hexStringToColor(hex) {
+	hex = parseInt(hex, 16);
+	var red = (hex & 0xFF0000) >> 16;
+	var green = (hex & 0xFF00) >> 8;
+	var blue = hex & 0xFF;
+	console.log("split color: " + red + " : " + green + " : " + blue);
+	
+	var color = {
+		red: red,
+		green: green,
+		blue: blue,
+	};
+	
+	return color;
 }
 
 function fractionToRadian(fraction) {
 	return fraction * 2 * Math.PI;
+}
+
+function convertRange(x, xMin, xMax, yMin, yMax) {
+	var percent = (yMax - yMin) / (xMax - xMin);
+	return percent * (x - xMin) + yMin;
 }
 
 function drawLine(ctx, x1, y1, x2, y2) {
@@ -45,7 +78,7 @@ function drawLine(ctx, x1, y1, x2, y2) {
 	ctx.stroke();
 }
 
-function drawHand(ctx, cx, cy, angle, length, width) {
+function drawHand(ctx, cx, cy, angle, length, width, color) {
 	var x = cx + Math.sin(angle) * length;
 	var y = cy - Math.cos(angle) * length;
 	
@@ -54,18 +87,46 @@ function drawHand(ctx, cx, cy, angle, length, width) {
 	
 	if (width === 10) {
 		ctx.lineWidth = 3;
-		ctx.strokeStyle = "black";
+		ctx.strokeStyle = "#" + color;
 		drawLine(ctx, cx, cy, x, y);
 	}
 }
 
-function drawTick(ctx, ex, ey, angle, length, color) {
+function drawTick(ctx, ex, ey, angle, length) {
 	var x = ex - Math.sin(angle) * length;
 	var y = ey + Math.cos(angle) * length;
 	
 	ctx.lineWidth = 4;
-	ctx.strokeStyle = color;
 	drawLine(ctx, ex, ey, x, y);
+}
+
+function drawTicks(ctx, cx, cy, maxLength) {
+	for (var ii = 0; ii < 360; ii += 6) {
+		var angle = fractionToRadian(ii / 360);
+		var x = cx + Math.sin(angle) * maxLength;
+		var y = cy - Math.cos(angle) * maxLength;
+		
+		if (ii % 30 === 0) {
+			drawTick(ctx, x, y, angle, maxLength * 0.1);
+		}
+	}
+}
+
+function drawBackground(ctx, color, x, y) {
+	ctx.fillStyle = "#" + color;
+	ctx.fillRect(0, 0, x, y);
+}
+
+function setColor(ctx, color) {
+	var redMap = color.red * 0.299;
+	var greenMap = color.green * 0.587;
+	var blueMap = color.blue * 0.114;
+	
+	if ((redMap + greenMap + blueMap) > 127.5) {
+		return "black";
+	} else {
+		return "white";
+	}
 }
 
 function drawText(ctx, x, y, text) {
@@ -79,8 +140,16 @@ function drawCenter(ctx, cx, cy) {
 	ctx.rockyFillRadial(cx, cy, 0, 4, 0, 2 * Math.PI);
 }
 
+function extendString(string, length) {
+	if (string.length < length) {
+		return extendString("0".concat(string), length);
+	} else {
+		return string;
+	}
+}
+
 rocky.on("draw", function(event) {
-	drawFace(event.context);
+	draw(event.context);
 });
 
 rocky.on("minutechange", function(event) {
@@ -89,16 +158,6 @@ rocky.on("minutechange", function(event) {
 
 rocky.on("message", function(event) {
   	settings = event.data;
-	switch(settings.handColor) {
-		case "blue":
-			handColor = "blue";
-			break;
-		case "red":
-			handColor = "red";
-			break;
-		default:
-			handColor = "white";
-	}
   	rocky.requestDraw();
 });
 

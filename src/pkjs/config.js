@@ -1,39 +1,35 @@
 module.exports = [
-	{
-		"type": "heading",
-    	"defaultValue": "Watchface Configuration"
-  	},
-  	{
-    	"type": "text",
-   		"defaultValue": "Simple"
-  	},
-  	{
-    	"type": "section",
-    	"items": [
-      		{
-        		"type": "select",
-        		"messageKey": "handColor",
-				"options": [
-					{
-						"label": "White",
-						"value": "white"
-					},
-					{
-						"label": "Red",
-						"value": "red"
-					},
-					{
-						"label": "Blue",
-						"value": "blue"
-					}
-				],
-        		"defaultValue": "white",
-        		"label": "Watchhand Color?"
-      		},
-    	]
-	},
-  	{
-    	"type": "submit",
-    	"defaultValue": "Save Settings"
-  	}
+  {
+    "type": "heading",
+    "defaultValue": "Watchface Configuration"
+  },
+  {
+    "type": "text",
+    "defaultValue": "Hex Color"
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Additional Data"
+      },
+      {
+        "type": "toggle",
+        "messageKey": "showHex",
+        "defaultValue": "false",
+        "label": "Show Hex Value?"
+      },
+      {
+        "type": "toggle",
+        "messageKey": "showDate",
+        "defaultValue": "false",
+        "label": "Show Date?"
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Save Settings"
+  }
 ];
