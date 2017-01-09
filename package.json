@@ -2,12 +2,12 @@
     "author": "alekoz47",
     "dependencies": {},
     "keywords": [],
-    "name": "simple",
+    "name": "hex-analog",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "Simple",
+        "displayName": "Hex Analog",
         "enableMultiJS": true,
         "messageKeys": [],
         "projectType": "rocky",
@@ -25,5 +25,5 @@
             "watchface": true
         }
     },
-    "version": "3.0.0"
+    "version": "1.0.0"
 }

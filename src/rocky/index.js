@@ -26,10 +26,22 @@ function draw(ctx) {
 	ctx.strokeStyle = overlayColor;
 	ctx.fillStyle = overlayColor;
 	drawTicks(ctx, cx, cy, maxLength);
-	drawText(ctx, w - 45, cy - ctx.measureText("0").height, d.getDate().toString());
 	drawHand(ctx, cx, cy, minuteAngle, maxLength * 0.8, 7, color);
 	drawHand(ctx, cx, cy, hourAngle, maxLength * 0.5, 10, color);
 	drawCenter(ctx, cx, cy);
+	
+	ctx.textAlign = "left";
+	var textString = d.getDate().toString();
+	if (settings) {
+		if (settings.showHex) {
+			colorString.red = extendString(colorString.red.toString(16), 2);
+			colorString.green = extendString(colorString.green.toString(16), 2);
+			colorString.blue = extendString(colorString.blue.toString(16), 2);
+			textString = colorString.red + colorString.green + colorString.blue;
+		}
+	}
+	var centerAdjust = ctx.measureText(textString).width / 2;
+	drawText(ctx, cx - centerAdjust, h - (ctx.measureText("0").height * 3), textString);
 }
 
 function dateToHex(d, h, m) {
@@ -131,7 +143,6 @@ function setColor(ctx, color) {
 
 function drawText(ctx, x, y, text) {
 	ctx.fillStyle = "white";
-	ctx.textAlign = "left";
 	ctx.font = "18px bold Gothic";
 	ctx.fillText(text, x, y);
 }
