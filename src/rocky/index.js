@@ -41,7 +41,7 @@ function draw(ctx) {
 		}
 	}
 	var centerAdjust = ctx.measureText(textString).width / 2;
-	drawText(ctx, cx - centerAdjust, h - (ctx.measureText("0").height * 3), textString);
+	drawText(ctx, cx - centerAdjust, h - (ctx.measureText("0").height * 3.5), textString);
 }
 
 function dateToHex(d, h, m) {
@@ -72,22 +72,6 @@ function hexStringToColor(hex) {
 	};
 	
 	return color;
-}
-
-function fractionToRadian(fraction) {
-	return fraction * 2 * Math.PI;
-}
-
-function convertRange(x, xMin, xMax, yMin, yMax) {
-	var percent = (yMax - yMin) / (xMax - xMin);
-	return percent * (x - xMin) + yMin;
-}
-
-function drawLine(ctx, x1, y1, x2, y2) {
-	ctx.beginPath();
-	ctx.moveTo(x1, y1);
-	ctx.lineTo(x2, y2);
-	ctx.stroke();
 }
 
 function drawHand(ctx, cx, cy, angle, length, width, color) {
@@ -124,11 +108,6 @@ function drawTicks(ctx, cx, cy, maxLength) {
 	}
 }
 
-function drawBackground(ctx, color, x, y) {
-	ctx.fillStyle = "#" + color;
-	ctx.fillRect(0, 0, x, y);
-}
-
 function setColor(ctx, color) {
 	var redMap = color.red * 0.299;
 	var greenMap = color.green * 0.587;
@@ -141,10 +120,21 @@ function setColor(ctx, color) {
 	}
 }
 
+function drawBackground(ctx, color, x, y) {
+	ctx.fillStyle = "#" + color;
+	ctx.fillRect(0, 0, x, y);
+}
+
 function drawText(ctx, x, y, text) {
-	ctx.fillStyle = "white";
 	ctx.font = "18px bold Gothic";
 	ctx.fillText(text, x, y);
+}
+
+function drawLine(ctx, x1, y1, x2, y2) {
+	ctx.beginPath();
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.stroke();
 }
 
 function drawCenter(ctx, cx, cy) {
@@ -157,6 +147,15 @@ function extendString(string, length) {
 	} else {
 		return string;
 	}
+}
+
+function fractionToRadian(fraction) {
+	return fraction * 2 * Math.PI;
+}
+
+function convertRange(x, xMin, xMax, yMin, yMax) {
+	var percent = (yMax - yMin) / (xMax - xMin);
+	return percent * (x - xMin) + yMin;
 }
 
 rocky.on("draw", function(event) {
