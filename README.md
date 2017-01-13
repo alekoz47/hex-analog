@@ -1,4 +1,4 @@
-# Simple
-This is my first attempt at a Pebble watchface using RockyJS. The final design will be a simple analog face with tickmarks and a date display.
+# Hex Analog
+This is a combination of my first analog watchface and Hex Color. It displays a changing background color based on the time of day.
   
-[Pebble Store](https://apps.getpebble.com/en_US/application/5833003b8c7ffffa9800018a)
+[Pebble Store](https://apps.getpebble.com/applications/5878ed5f5de8509ab500099a)
