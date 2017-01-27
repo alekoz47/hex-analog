@@ -32,14 +32,13 @@ function draw(ctx) {
 	
 	ctx.textAlign = "left";
 	var textString = d.getDate().toString();
-	if (settings) {
+	if (settings)
 		if (settings.showHex) {
 			colorString.red = extendString(colorString.red.toString(16), 2);
 			colorString.green = extendString(colorString.green.toString(16), 2);
 			colorString.blue = extendString(colorString.blue.toString(16), 2);
 			textString = colorString.red + colorString.green + colorString.blue;
 		}
-	}
 	var centerAdjust = ctx.measureText(textString).width / 2;
 	drawText(ctx, cx - centerAdjust, h - (ctx.measureText("0").height * 3.5), textString);
 }
@@ -102,9 +101,8 @@ function drawTicks(ctx, cx, cy, maxLength) {
 		var x = cx + Math.sin(angle) * maxLength;
 		var y = cy - Math.cos(angle) * maxLength;
 		
-		if (ii % 30 === 0) {
+		if (ii % 30 === 0)
 			drawTick(ctx, x, y, angle, maxLength * 0.1);
-		}
 	}
 }
 
@@ -113,11 +111,9 @@ function setColor(ctx, color) {
 	var greenMap = color.green * 0.587;
 	var blueMap = color.blue * 0.114;
 	
-	if ((redMap + greenMap + blueMap) > 127.5) {
+	if ((redMap + greenMap + blueMap) > 127.5)
 		return "black";
-	} else {
-		return "white";
-	}
+	else return "white";
 }
 
 function drawBackground(ctx, color, x, y) {
@@ -142,11 +138,9 @@ function drawCenter(ctx, cx, cy) {
 }
 
 function extendString(string, length) {
-	if (string.length < length) {
+	if (string.length < length)
 		return extendString("0".concat(string), length);
-	} else {
-		return string;
-	}
+	else return string;
 }
 
 function fractionToRadian(fraction) {
